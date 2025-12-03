@@ -204,7 +204,7 @@ class UserDatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE
 
     fun addUser(username: String, email: String, password: String) : Boolean {
         val passwordHashed = password.hashCode()
-        val date = SimpleDateFormat("dd/mm/yyyy", Locale.getDefault()).format(Date())
+        val date = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date())
 
         val values = ContentValues().apply {
             put(COLUMN_USERNAME, username)
@@ -717,5 +717,17 @@ class UserDatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE
         }
 
         db.update(TABLE_USERS, values, "$COLUMN_ID = ?", arrayOf(userID.toString()))
+    }
+
+    fun getUserJoinDate(userID: Int) : String {
+        val db = this.readableDatabase
+        val cursor = db.rawQuery("SELECT $COLUMN_DATE_CREATED FROM $TABLE_USERS WHERE $COLUMN_ID = ?", arrayOf(userID.toString()))
+
+        var date = ""
+        if (cursor.moveToFirst()) {
+            date = cursor.getString(cursor.getColumnIndexOrThrow("date_created"))
+        }
+        cursor.close()
+        return date
     }
 }

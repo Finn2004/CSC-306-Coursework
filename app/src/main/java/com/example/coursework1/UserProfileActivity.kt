@@ -33,6 +33,7 @@ class UserProfileActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         val sharedPreferences = getSharedPreferences("app_preferences", MODE_PRIVATE)
         val database = UserDatabaseManager(this)
+        val userID = database.getUserIdByUsername(sharedPreferences.getString("User", null))
 
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -54,6 +55,9 @@ class UserProfileActivity : AppCompatActivity() {
         val profileCard = findViewById<CardView>(R.id.profile_card)
         val profileUsername = findViewById<TextView>(R.id.username)
         profileUsername.text = sharedPreferences.getString("User", null)
+        val profileActive = findViewById<TextView>(R.id.ActiveTime)
+        val date = "Active since: " + database.getUserJoinDate(userID)
+        profileActive.text = date
 
         profileCard.setOnClickListener {
             val popUpLayout = layoutInflater.inflate(R.layout.profile_card_layout, null)
