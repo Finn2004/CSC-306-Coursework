@@ -1,0 +1,137 @@
+<resources>
+    <string name="app_name">Coursework 1</string>
+
+    <string-array name="metrics">
+        <item>None</item>
+        <item>Litres</item>
+        <item>Millilitres</item>
+        <item>Kilometres</item>
+        <item>Metres</item>
+        <item>Miles</item>
+        <item>Hours</item>
+        <item>Minutes</item>
+        <item>kCal</item>
+    </string-array>
+
+    <string-array name="progress_name">
+        <item>Daily Water Intake</item>
+        <item>5-a-day</item>
+        <item>Daily Calorie Intake</item>
+        <item>Walking Distance</item>
+        <item>Cycling Distance</item>
+        <item>Sleep monitor</item>
+        <item>Exercise Duration</item>
+        <item>Swimming Duration</item>
+    </string-array>
+
+    <array name="progress_indicator_colour">
+        <item>@color/Water_blue</item>
+        <item>@color/Grape</item>
+        <item>@color/Fire</item>
+        <item>@color/Light_gray</item>
+        <item>@color/Spandex_blue</item>
+        <item>@color/cloud_white</item>
+        <item>@color/rage_red</item>
+        <item>@color/Pool_blue</item>
+    </array>
+
+    <array name="progress_track_colour">
+        <item>@color/Brown</item>
+        <item>@color/Tree_green</item>
+        <item>@color/Fire_second</item>
+        <item>@color/Unselected_red</item>
+        <item>@color/Spandex_yellow</item>
+        <item>@color/sleepy_green</item>
+        <item>@color/Roof_tile</item>
+        <item>@color/Grape</item>
+    </array>
+
+    <string name="refresh_xml">Refresh</string>
+    <string name="profile_xml">Profile</string>
+    <string name="linked">Linked</string>
+    <string name="log_xml">Log out</string>
+    <string name="settings_xml">Settings</string>
+    <string name="home_screen_button">Home screen</string>
+    <string name="statistics_button">statistics screen</string>
+    <string name="goals_button">Goals and challenges screen</string>
+    <string name="competition_button">Competition screen</string>
+    <string name="habit_symbol">Habit symbol</string>
+    <string name="default_text">default text</string>
+    <string name="add_widget">Add Widget</string>
+    <string name="water_drank">Amount of water drank today:</string>
+    <string name="add_goals">Add goals</string>
+    <string name="habit_goals_title">Habit Goals:</string>
+    <string name="challenge_goals_title">Challenge Goals:</string>
+    <string name="daily_challenges_text">Daily Challenges:</string>
+    <string name="weekly_challenges_text">Weekly Challenges:</string>
+    <string name="drink_goal">Drink an average of 3L of water a day:</string>
+    <string name="progress_water">2L / 3L</string>
+    <string name="water_habit_symbol">water habit symbol</string>
+    <string name="daily_challenge_water">Drink 4L of water:</string>
+    <string name="daily_challenge_progress">1L / 4L</string>
+    <string name="weekly_challenge_water">Drink 60 glasses of water:</string>
+    <string name="weekly_challenge_progress">13 / 60 glasses</string>
+    <string name="example_username">MM_2004</string>
+    <string name="example_active_for">Active for: 87 days</string>
+    <string name="example_bio">Bio: Dedicated to my health and wellbeing!</string>
+    <string name="profile_info_tab">Profile info</string>
+    <string name="achievements_tab">Achievements</string>
+    <string name="profile_level_text">Profile Level:</string>
+    <string name="example_level">Level 6</string>
+    <string name="example_experience">100 / 250 XP</string>
+    <string name="completed_goals_text">Completed Goals:</string>
+    <string name="completed">Completed!</string>
+    <string name="usernameTextHint">Username</string>
+    <string name="emailTextHint">Email</string>
+    <string name="passwordTextHint">Password</string>
+    <string name="loginButton">Log in</string>
+    <string name="signupButton">Sign up</string>
+    <string name="Habit_Initialisation">Select Habits to track\n(can be changed later)</string>
+    <string name="daily_water_intake_habit_button">Daily Water Intake</string>
+    <string name="_5_a_day_habit_button">5-a-day</string>
+    <string name="daily_calorie_intake_habit_button">Daily Calorie Intake</string>
+    <string name="walking_distance_habit_button">Walking Distance</string>
+    <string name="cycling_distance_habit_button">Cycling Distance</string>
+    <string name="sleep_monitor_habit_button">Sleep monitor</string>
+    <string name="exercise_duration_habit_button">Exercise Duration</string>
+    <string name="swimming_duration_habit_button">Swimming Duration</string>
+    <string name="save">Save</string>
+    <string name="create_a_goal_text">Create A Goal\n(Can be edited later)</string>
+    <string name="goal_title_hint">Goal Title</string>
+    <string name="goal_field">Goal</string>
+    <string name="select_a_metric_spinner">Select a metric</string>
+    <string name="personal_info_text">Enter personal info\n(optional)</string>
+    <string name="first_name_hint">First Name</string>
+    <string name="surname_hint">Surname</string>
+    <string name="height_hint">Height</string>
+    <string name="Centimetres">cm</string>
+    <string name="weight_hint">Weight</string>
+    <string name="Kilograms">kg</string>
+    <string name="date_of_birth_title">Date of birth:</string>
+    <string name="day">DD</string>
+    <string name="date_dash">/</string>
+    <string name="month">MM</string>
+    <string name="year">YYYY</string>
+    <string name="progress">Progress</string>
+    <string name="Placeholder_current_progress">\'\'/\'\'</string>
+    <string name="habits_edit">Select habits to track</string>
+    <string name="goal_icon">Goal icon</string>
+    <string name="create_a_goal_text_2">Create a goal</string>
+    <string name="goal_symbol">goal symbol</string>
+    <string name="XP_placeholder">0XP</string>
+    <string name="change_account_email_address">Change Account Email Address</string>
+    <string name="change_account_password">Change Account Password</string>
+    <string name="delete_all_personal_data">Delete All Personal Data</string>
+    <string name="delete_account">Delete Account</string>
+    <string name="private_account">Private</string>
+    <string name="public_account">Public</string>
+    <string name="account_viewing_privacy">Account Viewing Privacy</string>
+    <string name="change_email_address">Change Email Address</string>
+    <string name="new_email_address">New Email Address</string>
+    <string name="old_email_address">Old Email Address</string>
+    <string name="change_password">Change Password</string>
+    <string name="email_address">Email Address</string>
+    <string name="old_password">Old Password</string>
+    <string name="new_password">New Password</string>
+    <string name="confirm">Confirm</string>
+</resources>

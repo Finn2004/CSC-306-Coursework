@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/button_bar">
+
+    <TextView
+        android:id="@+id/Habit_select_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:textAlignment="center"
+        android:text="@string/habits_edit"
+        android:textSize="24sp"
+        android:textColor="@color/white"/>
+
+    <LinearLayout
+        android:id="@+id/Habit_button_grid_vert"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:layout_below="@+id/Habit_select_text">
+
+        <LinearLayout
+            android:id="@+id/Habit_button_grid_row1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ToggleButton
+                android:id="@+id/water_intake_button"
+                android:layout_width="100dp"
+                android:layout_height="60dp"
+                android:layout_margin="12dp"
+                android:textOn="@string/daily_water_intake_habit_button"
+                android:textOff="@string/daily_water_intake_habit_button"
+                android:elevation="4dp"
+                android:background="@color/habit_toggle_background_colour"
+                android:textColor="@color/habit_text_colour"
+                android:layout_gravity="center"
+                android:gravity="center"/>
+
+            <ToggleButton
+                android:id="@+id/five_a_day_button"
+                android:layout_width="100dp"
+                android:layout_height="60dp"
+                android:layout_margin="12dp"
+                android:textOn="@string/_5_a_day_habit_button"
+                android:textOff="@string/_5_a_day_habit_button"
+                android:elevation="4dp"
+                android:background="@color/habit_toggle_background_colour"
+                android:textColor="@color/habit_text_colour"
+                android:layout_gravity="center"
+                android:gravity="center"/>
+
+            <ToggleButton
+                android:id="@+id/calorie_intake_button"
+                android:layout_width="100dp"
+                android:layout_height="60dp"
+                android:layout_margin="12dp"
+                android:textOn="@string/daily_calorie_intake_habit_button"
+                android:textOff="@string/daily_calorie_intake_habit_button"
+                android:elevation="4dp"
+                android:background="@color/habit_toggle_background_colour"
+                android:textColor="@color/habit_text_colour"
+                android:layout_gravity="center"
+                android:gravity="center"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/Habit_button_grid_row2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ToggleButton
+                android:id="@+id/walking_button"
+                android:layout_width="100dp"
+                android:layout_height="60dp"
+                android:layout_margin="12dp"
+                android:textOn="@string/walking_distance_habit_button"
+                android:textOff="@string/walking_distance_habit_button"
+                android:elevation="4dp"
+                android:background="@color/habit_toggle_background_colour"
+                android:textColor="@color/habit_text_colour"
+                android:layout_gravity="center"
+                android:gravity="center"/>
+
+            <ToggleButton
+                android:id="@+id/cycling_button"
+                android:layout_width="100dp"
+                android:layout_height="60dp"
+                android:layout_margin="12dp"
+                android:textOn="@string/cycling_distance_habit_button"
+                android:textOff="@string/cycling_distance_habit_button"
+                android:elevation="4dp"
+                android:background="@color/habit_toggle_background_colour"
+                android:textColor="@color/habit_text_colour"
+                android:layout_gravity="center"
+                android:gravity="center"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/Habit_button_grid_row3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ToggleButton
+                android:id="@+id/sleep_button"
+                android:layout_width="100dp"
+                android:layout_height="60dp"
+                android:layout_margin="12dp"
+                android:textOn="@string/sleep_monitor_habit_button"
+                android:textOff="@string/sleep_monitor_habit_button"
+                android:elevation="4dp"
+                android:background="@color/habit_toggle_background_colour"
+                android:textColor="@color/habit_text_colour"
+                android:layout_gravity="center"
+                android:gravity="center"/>
+
+            <ToggleButton
+                android:id="@+id/exercise_button"
+                android:layout_width="100dp"
+                android:layout_height="60dp"
+                android:layout_margin="12dp"
+                android:textOn="@string/exercise_duration_habit_button"
+                android:textOff="@string/exercise_duration_habit_button"
+                android:elevation="4dp"
+                android:background="@color/habit_toggle_background_colour"
+                android:textColor="@color/habit_text_colour"
+                android:layout_gravity="center"
+                android:gravity="center"/>
+
+            <ToggleButton
+                android:id="@+id/swimming_button"
+                android:layout_width="100dp"
+                android:layout_height="60dp"
+                android:layout_margin="12dp"
+                android:textOn="@string/swimming_duration_habit_button"
+                android:textOff="@string/swimming_duration_habit_button"
+                android:elevation="4dp"
+                android:background="@color/habit_toggle_background_colour"
+                android:textColor="@color/habit_text_colour"
+                android:layout_gravity="center"
+                android:gravity="center"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

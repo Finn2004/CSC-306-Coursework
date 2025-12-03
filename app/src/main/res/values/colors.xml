@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="button_bar">#353434</color>
+    <color name="background_tint">#141313</color>
+    <color name="background">#161515</color>
+    <color name="Brown">#AD5A10</color>
+    <color name="Gold">#EFBF04</color>
+    <color name="Emerald">#50C878</color>
+    <color name="Selected_green">#97FCB9</color>
+    <color name="Unselected_red">#FC9B97</color>
+    <color name="Light_gray">#CCCCCC</color>
+    <color name="Grape">#E941FF</color>
+    <color name="Tree_green">#3DD16F</color>
+    <color name="Water_blue">#34B7E7</color>
+    <color name="Fire">#F78C19</color>
+    <color name="Fire_second">#F5CD67</color>
+    <color name="Spandex_blue">#2563E8</color>
+    <color name="Spandex_yellow">#CBED5C</color>
+    <color name="cloud_white">#F1F2ED</color>
+    <color name="sleepy_green">#2DAD58</color>
+    <color name="rage_red">#FB444A</color>
+    <color name="Roof_tile">#C76542</color>
+    <color name="Pool_blue">#3D65F5</color>
+    <color name="swimsuit_purple">#AA7CEB</color>
+</resources>

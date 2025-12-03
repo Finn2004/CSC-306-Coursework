@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card"
+    android:layout_width="match_parent"
+    android:layout_height="74dp"
+    android:layout_margin="10dp"
+    android:clickable="true"
+    android:focusable="true"
+    app:cardBackgroundColor="@color/button_bar"
+    app:cardCornerRadius="6dp"
+    app:cardElevation="6dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.3"
+            android:text="@string/drink_goal"
+            android:textColor="@color/white"
+            android:padding="2dp"/>
+
+        <LinearLayout
+            android:id="@+id/layout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.7"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="10dp">
+
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:layout_width="0dp"
+                android:layout_weight="0.68"
+                android:layout_height="50dp"
+                android:indeterminate="false"
+                android:max="3"
+                android:progress="3"
+                app:indicatorColor="@color/Gold"
+                app:indicatorInset="3dp"
+                app:indicatorSize="33dp" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="0.27"
+                android:layout_height="wrap_content"
+                android:text="@string/completed"
+                android:padding="6dp"
+                android:textColor="@color/white"/>
+
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_weight="0.05"
+                android:src="@drawable/ic_water"
+                android:contentDescription="@string/water_habit_symbol" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>
