@@ -38,6 +38,7 @@
         <activity
             android:name=".HomeScreenActivity"
             android:exported="false" />
+
     </application>
 
 </manifest>

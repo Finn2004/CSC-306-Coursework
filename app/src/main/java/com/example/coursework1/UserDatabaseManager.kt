@@ -4,14 +4,16 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.net.Uri
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import androidx.core.net.toUri
 
 class UserDatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
     companion object {
         private const val DATABASE_NAME = "APP_USERS"
-        private const val DATABASE_VERSION = 25
+        private const val DATABASE_VERSION = 27
         private const val FAILED = -1L
         private const val TABLE_USERS = "users"
         private const val TABLE_USER_INFO = "user_info"
@@ -26,6 +28,7 @@ class UserDatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE
         private const val COLUMN_PRIVACY = "account_privacy"
         private const val COLUMN_DATE_CREATED = "date_created"
         private const val COLUMN_BIO = "bio"
+        private const val COLUMN_PROFILE_PICTURE = "profile_picture"
         private const val COLUMN_FIRST_NAME = "firstname"
         private const val COLUMN_SURNAME = "surname"
         private const val COLUMN_DOB = "dob"
@@ -36,6 +39,7 @@ class UserDatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE
         private const val COLUMN_GOAL_TARGET = "goal_target"
         private const val COLUMN_GOAL_PROGRESS = "goal_progress"
         private const val COLUMN_GOAL_METRIC = "goal_metric"
+        private const val COLUMN_GOAL_COMPLETED = "goal_completed"
         private const val COLUMN_HABIT_NAME = "habit_name"
         private const val COLUMN_HABIT_PROGRESS = "habit_progress"
         private const val COLUMN_HABIT_MAX = "habit_max"
@@ -63,7 +67,8 @@ class UserDatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE
                     "$COLUMN_PASSWORD TEXT NOT NULL," +
                     "$COLUMN_PRIVACY TEXT NOT NULL," +
                     "$COLUMN_DATE_CREATED TEXT NOT NULL," +
-                    "$COLUMN_BIO TEXT)"
+                    "$COLUMN_BIO TEXT," +
+                    "$COLUMN_PROFILE_PICTURE TEXT)"
 
         val createUserInfoTable =
             "CREATE TABLE $TABLE_USER_INFO($COLUMN_ID INTEGER PRIMARY KEY," +
@@ -82,6 +87,7 @@ class UserDatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE
                     "$COLUMN_GOAL_PROGRESS INTEGER," +
                     "$COLUMN_GOAL_METRIC TEXT," +
                     "$COLUMN_USER_ID INTEGER," +
+                    "$COLUMN_GOAL_COMPLETED INTEGER," +
                     "FOREIGN KEY ($COLUMN_USER_ID) REFERENCES $TABLE_USERS($COLUMN_ID) ON DELETE CASCADE)"
 
         val createUserHabitsTable =
@@ -213,6 +219,7 @@ class UserDatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE
             put(COLUMN_PRIVACY, "Public")
             put(COLUMN_DATE_CREATED, date)
             put(COLUMN_BIO, "")
+            put(COLUMN_PROFILE_PICTURE, "")
         }
 
         val db = this.writableDatabase
@@ -241,6 +248,7 @@ class UserDatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE
             put(COLUMN_GOAL_TARGET, goal[1].toInt())
             put(COLUMN_GOAL_PROGRESS, 0)
             put(COLUMN_GOAL_METRIC, goal[2])
+            put(COLUMN_GOAL_COMPLETED, 0)
             put(COLUMN_USER_ID, goal[3].toInt())
         }
 
@@ -729,5 +737,92 @@ class UserDatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE
         }
         cursor.close()
         return date
+    }
+
+    fun getUserBio(userID: Int) : String {
+        val db = this.readableDatabase
+        val cursor = db.rawQuery("SELECT $COLUMN_BIO FROM $TABLE_USERS WHERE $COLUMN_ID = ?", arrayOf(userID.toString()))
+
+        var bio = ""
+        if (cursor.moveToFirst()) {
+            bio = cursor.getString(cursor.getColumnIndexOrThrow("bio"))
+        }
+        cursor.close()
+        return bio
+    }
+
+    fun updateUserBio(userID: Int, bio: String) {
+        val db = this.writableDatabase
+
+        val values = ContentValues().apply {
+            put(COLUMN_BIO, bio)
+        }
+
+        db.update(TABLE_USERS, values, "$COLUMN_ID = ?", arrayOf(userID.toString()))
+    }
+
+    fun updateUserProfilePicture(userID: Int, uri: Uri?) {
+        val db = this.writableDatabase
+
+        val values = ContentValues().apply {
+            put(COLUMN_PROFILE_PICTURE, uri?.toString())
+        }
+
+        db.update(TABLE_USERS, values, "$COLUMN_ID = ?", arrayOf(userID.toString()))
+    }
+
+    fun getUserProfilePicture(userID: Int) : Uri? {
+        val db = this.readableDatabase
+        val cursor = db.rawQuery("SELECT $COLUMN_PROFILE_PICTURE FROM $TABLE_USERS WHERE $COLUMN_ID = ?", arrayOf(userID.toString()))
+
+        var uri: Uri? = null
+        if (cursor.moveToFirst()) {
+            val uriString = cursor.getString(0)
+            if (uriString != "") {
+                uri = uriString.toUri()
+            }
+        }
+        cursor.close()
+        return uri
+    }
+
+    fun completeGoal(goalID: Int) {
+        val db = this.writableDatabase
+
+        val values = ContentValues().apply {
+            put(COLUMN_GOAL_PROGRESS, getGoalMax(goalID))
+            put(COLUMN_GOAL_COMPLETED, 1)
+        }
+
+        db.update(TABLE_USER_GOALS, values, "$COLUMN_ID = ?", arrayOf(goalID.toString()))
+    }
+
+    fun getGoalMax(goalID: Int) : Int {
+        val db = this.readableDatabase
+        val cursor = db.rawQuery("SELECT $COLUMN_GOAL_TARGET FROM $TABLE_USER_GOALS WHERE $COLUMN_ID = ?", arrayOf(goalID.toString()))
+
+        var max = 0
+        if (cursor.moveToFirst()) {
+            max = cursor.getInt(0)
+        }
+        cursor.close()
+        return max
+    }
+
+    fun getGoalCompletedStatus(goalID : Int) : Boolean {
+        val db = this.readableDatabase
+        val cursor = db.rawQuery("SELECT $COLUMN_GOAL_COMPLETED FROM $TABLE_USER_GOALS WHERE $COLUMN_ID = ?", arrayOf(goalID.toString()))
+
+        var completedInt = 0
+        if (cursor.moveToFirst()) {
+            completedInt = cursor.getInt(0)
+        }
+        cursor.close()
+
+        var completed = false
+        if (completedInt == 1) {
+            completed = true
+        }
+        return completed
     }
 }

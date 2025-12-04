@@ -156,8 +156,14 @@ class GoalsAndChallengesActivity : AppCompatActivity() {
                     progressEntered = "0"
                 }
 
-                database.updateGoalProgress(goalId, progressEntered.toInt())
-                goalAdapter.updateProgress(goalId, progressEntered.toInt())
+                if (progressEntered.toInt() + clickedGoal.widgetProgress >= clickedGoal.widgetMax) {
+                    database.completeGoal(goalId)
+                    goalAdapter.removeWidget(goalId)
+                }
+                else {
+                    database.updateGoalProgress(goalId, progressEntered.toInt())
+                    goalAdapter.updateProgress(goalId, progressEntered.toInt())
+                }
                 popUp.dismiss()
 
             }
@@ -279,8 +285,14 @@ class GoalsAndChallengesActivity : AppCompatActivity() {
                     progressEntered = "0"
                 }
 
-                database.updateGoalProgress(goalId, progressEntered.toInt())
-                goalAdapterSecondary.updateProgress(goalId, progressEntered.toInt())
+                if (progressEntered.toInt() + clickedGoal.widgetProgress >= clickedGoal.widgetMax) {
+                    database.completeGoal(goalId)
+                    goalAdapterSecondary.removeWidget(goalId)
+                }
+                else {
+                    database.updateGoalProgress(goalId, progressEntered.toInt())
+                    goalAdapterSecondary.updateProgress(goalId, progressEntered.toInt())
+                }
                 popUp.dismiss()
 
             }
@@ -298,21 +310,24 @@ class GoalsAndChallengesActivity : AppCompatActivity() {
         val userGoalsNum = userGoals.size
 
         for (i in 0 until userGoalsNum) {
-            val text = userGoals[i][0]
-            val progress = userGoals[i][1].toInt()
-            val max = userGoals[i][2].toInt()
-            val metric = userGoals[i][3]
-            val goalId = userGoals[i][4].toInt()
+            if (!database.getGoalCompletedStatus(userGoals[i][4].toInt())) {
 
-            val newWidget = WidgetGoalInfo(
-                goalId = goalId,
-                widgetText = text,
-                widgetProgress = progress,
-                widgetMax = max,
-                widgetMetric = metric
-            )
+                val text = userGoals[i][0]
+                val progress = userGoals[i][1].toInt()
+                val max = userGoals[i][2].toInt()
+                val metric = userGoals[i][3]
+                val goalId = userGoals[i][4].toInt()
 
-            adapter.addWidget(newWidget)
+                val newWidget = WidgetGoalInfo(
+                    goalId = goalId,
+                    widgetText = text,
+                    widgetProgress = progress,
+                    widgetMax = max,
+                    widgetMetric = metric
+                )
+
+                adapter.addWidget(newWidget)
+            }
         }
         return adapter
     }

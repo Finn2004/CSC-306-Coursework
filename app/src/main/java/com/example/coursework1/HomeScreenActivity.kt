@@ -33,6 +33,7 @@ class HomeScreenActivity : AppCompatActivity() {
         val editor = sharedPreferences.edit()
 
         val database = UserDatabaseManager(this)
+        val userID = database.getUserIdByUsername(sharedPreferences.getString("User", null))
 
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/Background"
@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/background"
     android:backgroundTint="@color/background_tint"
+    android:orientation="vertical"
     tools:context=".UserProfileActivity">
 
     <com.google.android.material.appbar.MaterialToolbar
@@ -23,16 +24,6 @@
         app:title="Profile"
         app:titleCentered="true"/>
 
-    <LinearLayout
-        android:id="@+id/profile_vert_layout"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/user_profile_screen_top_toolbar">
 
         <androidx.cardview.widget.CardView
             android:id="@+id/profile_card"
@@ -49,11 +40,20 @@
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
 
-                <ImageView
+                <androidx.cardview.widget.CardView
                     android:layout_width="128dp"
                     android:layout_height="128dp"
-                    android:src="@drawable/ic_account"
-                    android:contentDescription="@string/profile_xml"/>
+                    app:cardCornerRadius="64dp"
+                    android:layout_margin="8dp">
+
+                    <ImageView
+                        android:id="@+id/profile_image"
+                        android:layout_width="128dp"
+                        android:layout_height="128dp"
+                        android:src="@drawable/ic_account"
+                        android:contentDescription="@string/profile_xml"/>
+
+                </androidx.cardview.widget.CardView>
 
                 <LinearLayout
                     android:layout_height="match_parent"
@@ -83,6 +83,7 @@
                         android:textSize="16sp" />
 
                     <TextView
+                        android:id="@+id/profile_bio"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="6dp"
@@ -114,6 +115,7 @@
                 android:layout_height="wrap_content"
                 style="@style/Widget.MaterialComponents.Button"
                 android:text="@string/profile_info_tab"
+                android:checkable="true"
                 android:backgroundTint="@color/toggle_background_colour"
                 android:textColor="@color/toggle_text_colour"/>
 
@@ -124,95 +126,17 @@
                 android:layout_height="wrap_content"
                 style="@style/Widget.MaterialComponents.Button"
                 android:text="@string/achievements_tab"
+                android:checkable="true"
                 android:backgroundTint="@color/toggle_background_colour"
                 android:textColor="@color/toggle_text_colour"/>
 
         </com.google.android.material.button.MaterialButtonToggleGroup>
 
-        <TextView
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/pager"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="6dp"
-            android:text="@string/profile_level_text"
-            android:textColor="@color/white"
-            android:textStyle="bold" />
+            android:layout_height="0dp"
+            android:layout_weight="1">
+        </androidx.viewpager2.widget.ViewPager2>
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/card"
-            android:layout_width="match_parent"
-            android:layout_height="74dp"
-            android:layout_margin="10dp"
-            android:clickable="true"
-            android:focusable="true"
-            app:cardBackgroundColor="@color/button_bar"
-            app:cardCornerRadius="6dp"
-            app:cardElevation="6dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:padding="2dp"
-                    android:text="@string/example_level"
-                    android:textAllCaps="true"
-                    android:textColor="@color/Gold"
-                    android:textSize="24sp"
-                    android:textStyle="bold" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:orientation="horizontal">
-
-                    <com.google.android.material.progressindicator.LinearProgressIndicator
-                        android:layout_width="0dp"
-                        android:layout_weight="0.75"
-                        android:layout_height="match_parent"
-                        android:padding="12dp"
-                        android:indeterminate="false"
-                        android:max="250"
-                        android:progress="100"
-                        app:indicatorColor="@color/Emerald"
-                        app:indicatorInset="3dp"
-                        app:indicatorSize="33dp" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_weight="0.25"
-                        android:layout_height="match_parent"
-                        android:padding="6dp"
-                        android:text="@string/example_experience"
-                        android:textColor="@color/Emerald"/>
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-        </androidx.cardview.widget.CardView>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="6dp"
-            android:text="@string/completed_goals_text"
-            android:textColor="@color/white"
-            android:textStyle="bold" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/completed_goals_list"
-            android:layout_width="match_parent"
-            android:layout_height="286dp"
-            android:padding="10dp"
-            android:scrollbars="vertical"
-            tools:itemCount="1"
-            tools:listitem="@layout/completed_goal_layout" />
-
-    </LinearLayout>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

@@ -61,9 +61,10 @@ class WidgetGoalAdapter(private val widgetButton: (WidgetGoalInfo) -> Unit) : Re
         notifyItemInserted(layouts.size - 1)
     }
 
-    fun removeWidget(layout: WidgetGoalInfo) {
-        val position = layouts.indexOf(layout)
-        layouts.remove(layout)
+    fun removeWidget(id: Int) {
+        val position = layouts.indexOfFirst { it.goalId == id }
+
+        layouts.remove(layouts[position])
         notifyItemRemoved(position)
     }
 
