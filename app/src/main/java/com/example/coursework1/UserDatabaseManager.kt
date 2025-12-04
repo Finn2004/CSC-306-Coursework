@@ -13,7 +13,7 @@ import androidx.core.net.toUri
 class UserDatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
     companion object {
         private const val DATABASE_NAME = "APP_USERS"
-        private const val DATABASE_VERSION = 27
+        private const val DATABASE_VERSION = 30
         private const val FAILED = -1L
         private const val TABLE_USERS = "users"
         private const val TABLE_USER_INFO = "user_info"
@@ -27,6 +27,9 @@ class UserDatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE
         private const val COLUMN_PASSWORD = "password"
         private const val COLUMN_PRIVACY = "account_privacy"
         private const val COLUMN_DATE_CREATED = "date_created"
+        private const val COLUMN_LEVEL = "level"
+        private const val COLUMN_CURRENT_XP = "current_xp"
+        private const val COLUMN_LEVEL_UP_XP = "level_up_xp"
         private const val COLUMN_BIO = "bio"
         private const val COLUMN_PROFILE_PICTURE = "profile_picture"
         private const val COLUMN_FIRST_NAME = "firstname"
@@ -51,6 +54,7 @@ class UserDatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE
         private const val COLUMN_CHALLENGE_METRIC = "challenge_metric"
         private const val COLUMN_CHALLENGE_XP = "challenge_xp"
         private const val COLUMN_CHALLENGE_HABIT = "challenge_habit"
+        private const val COLUMN_CHALLENGE_COMPLETED = "challenge_completed"
 
     }
 
@@ -68,7 +72,10 @@ class UserDatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE
                     "$COLUMN_PRIVACY TEXT NOT NULL," +
                     "$COLUMN_DATE_CREATED TEXT NOT NULL," +
                     "$COLUMN_BIO TEXT," +
-                    "$COLUMN_PROFILE_PICTURE TEXT)"
+                    "$COLUMN_PROFILE_PICTURE TEXT," +
+                    "$COLUMN_LEVEL INTEGER NOT NULL," +
+                    "$COLUMN_CURRENT_XP INTEGER NOT NULL," +
+                    "$COLUMN_LEVEL_UP_XP INTEGER NOT NULL)"
 
         val createUserInfoTable =
             "CREATE TABLE $TABLE_USER_INFO($COLUMN_ID INTEGER PRIMARY KEY," +
@@ -107,7 +114,8 @@ class UserDatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE
                     "$COLUMN_CHALLENGE_TARGET INTEGER," +
                     "$COLUMN_CHALLENGE_METRIC TEXT," +
                     "$COLUMN_CHALLENGE_XP INTEGER," +
-                    "$COLUMN_CHALLENGE_HABIT TEXT)"
+                    "$COLUMN_CHALLENGE_HABIT TEXT," +
+                    "$COLUMN_CHALLENGE_COMPLETED INTEGER)"
 
         val createWeeklyChallengesTable =
             "CREATE TABLE $TABLE_WEEKLY_CHALLENGES($COLUMN_ID INTEGER PRIMARY KEY," +
@@ -116,7 +124,8 @@ class UserDatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE
                     "$COLUMN_CHALLENGE_TARGET INTEGER," +
                     "$COLUMN_CHALLENGE_METRIC TEXT," +
                     "$COLUMN_CHALLENGE_XP INTEGER," +
-                    "$COLUMN_CHALLENGE_HABIT TEXT)"
+                    "$COLUMN_CHALLENGE_HABIT TEXT," +
+                    "$COLUMN_CHALLENGE_COMPLETED INTEGER)"
 
 
         db.execSQL(createUserTable)
@@ -142,70 +151,70 @@ class UserDatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE
 
     fun setDailyChallenges(db: SQLiteDatabase) {
         db.execSQL("INSERT INTO $TABLE_DAILY_CHALLENGES ($COLUMN_CHALLENGE_TITLE, $COLUMN_CHALLENGE_PROGRESS," +
-                " $COLUMN_CHALLENGE_TARGET, $COLUMN_CHALLENGE_METRIC, $COLUMN_CHALLENGE_XP, $COLUMN_CHALLENGE_HABIT) " +
-                "VALUES ('Drink 5 Litres of water:', 0, 5000, 'ml', 15, 'Daily Water Intake')")
+                " $COLUMN_CHALLENGE_TARGET, $COLUMN_CHALLENGE_METRIC, $COLUMN_CHALLENGE_XP, $COLUMN_CHALLENGE_HABIT, $COLUMN_CHALLENGE_COMPLETED) " +
+                "VALUES ('Drink 5 Litres of water:', 0, 5000, 'ml', 15, 'Daily Water Intake', 0)")
 
         db.execSQL("INSERT INTO $TABLE_DAILY_CHALLENGES ($COLUMN_CHALLENGE_TITLE, $COLUMN_CHALLENGE_PROGRESS," +
-                " $COLUMN_CHALLENGE_TARGET, $COLUMN_CHALLENGE_METRIC, $COLUMN_CHALLENGE_XP, $COLUMN_CHALLENGE_HABIT) " +
-                "VALUES ('Eat 7 fruits:', 0, 7, '', 15, '5-a-day')")
+                " $COLUMN_CHALLENGE_TARGET, $COLUMN_CHALLENGE_METRIC, $COLUMN_CHALLENGE_XP, $COLUMN_CHALLENGE_HABIT, $COLUMN_CHALLENGE_COMPLETED) " +
+                "VALUES ('Eat 7 fruits:', 0, 7, '', 15, '5-a-day', 0)")
 
         db.execSQL("INSERT INTO $TABLE_DAILY_CHALLENGES ($COLUMN_CHALLENGE_TITLE, $COLUMN_CHALLENGE_PROGRESS," +
-                " $COLUMN_CHALLENGE_TARGET, $COLUMN_CHALLENGE_METRIC, $COLUMN_CHALLENGE_XP, $COLUMN_CHALLENGE_HABIT) " +
-                "VALUES ('Do Not Exceed 3500 kCal:', 0, 3500, 'kCal', 15, 'Daily Calorie Intake')")
+                " $COLUMN_CHALLENGE_TARGET, $COLUMN_CHALLENGE_METRIC, $COLUMN_CHALLENGE_XP, $COLUMN_CHALLENGE_HABIT, $COLUMN_CHALLENGE_COMPLETED) " +
+                "VALUES ('Do Not Exceed 3500 kCal:', 0, 3500, 'kCal', 15, 'Daily Calorie Intake', 0)")
 
         db.execSQL("INSERT INTO $TABLE_DAILY_CHALLENGES ($COLUMN_CHALLENGE_TITLE, $COLUMN_CHALLENGE_PROGRESS," +
-                " $COLUMN_CHALLENGE_TARGET, $COLUMN_CHALLENGE_METRIC, $COLUMN_CHALLENGE_XP, $COLUMN_CHALLENGE_HABIT) " +
-                "VALUES ('Walk a distance of 7 kilometres:', 0, 7000, 'm', 15, 'Walking Distance')")
+                " $COLUMN_CHALLENGE_TARGET, $COLUMN_CHALLENGE_METRIC, $COLUMN_CHALLENGE_XP, $COLUMN_CHALLENGE_HABIT, $COLUMN_CHALLENGE_COMPLETED) " +
+                "VALUES ('Walk a distance of 7 kilometres:', 0, 7000, 'm', 15, 'Walking Distance', 0)")
 
         db.execSQL("INSERT INTO $TABLE_DAILY_CHALLENGES ($COLUMN_CHALLENGE_TITLE, $COLUMN_CHALLENGE_PROGRESS," +
-                " $COLUMN_CHALLENGE_TARGET, $COLUMN_CHALLENGE_METRIC, $COLUMN_CHALLENGE_XP, $COLUMN_CHALLENGE_HABIT) " +
-                "VALUES ('Cycle a distance of 25 miles:', 0, 25, 'miles', 15, 'Cycling Distance')")
+                " $COLUMN_CHALLENGE_TARGET, $COLUMN_CHALLENGE_METRIC, $COLUMN_CHALLENGE_XP, $COLUMN_CHALLENGE_HABIT, $COLUMN_CHALLENGE_COMPLETED) " +
+                "VALUES ('Cycle a distance of 25 miles:', 0, 25, 'miles', 15, 'Cycling Distance', 0)")
 
         db.execSQL("INSERT INTO $TABLE_DAILY_CHALLENGES ($COLUMN_CHALLENGE_TITLE, $COLUMN_CHALLENGE_PROGRESS," +
-                " $COLUMN_CHALLENGE_TARGET, $COLUMN_CHALLENGE_METRIC, $COLUMN_CHALLENGE_XP, $COLUMN_CHALLENGE_HABIT) " +
-                "VALUES ('Sleep a total of 9 hours:', 0, 540, 'mins', 15, 'Sleep monitor')")
+                " $COLUMN_CHALLENGE_TARGET, $COLUMN_CHALLENGE_METRIC, $COLUMN_CHALLENGE_XP, $COLUMN_CHALLENGE_HABIT, $COLUMN_CHALLENGE_COMPLETED) " +
+                "VALUES ('Sleep a total of 9 hours:', 0, 540, 'mins', 15, 'Sleep monitor', 0)")
 
         db.execSQL("INSERT INTO $TABLE_DAILY_CHALLENGES ($COLUMN_CHALLENGE_TITLE, $COLUMN_CHALLENGE_PROGRESS," +
-                " $COLUMN_CHALLENGE_TARGET, $COLUMN_CHALLENGE_METRIC, $COLUMN_CHALLENGE_XP, $COLUMN_CHALLENGE_HABIT) " +
-                "VALUES ('Heavy workout for 2 hours:', 0, 120, 'mins', 15, 'Exercise Duration')")
+                " $COLUMN_CHALLENGE_TARGET, $COLUMN_CHALLENGE_METRIC, $COLUMN_CHALLENGE_XP, $COLUMN_CHALLENGE_HABIT, $COLUMN_CHALLENGE_COMPLETED) " +
+                "VALUES ('Heavy workout for 2 hours:', 0, 120, 'mins', 15, 'Exercise Duration', 0)")
 
         db.execSQL("INSERT INTO $TABLE_DAILY_CHALLENGES ($COLUMN_CHALLENGE_TITLE, $COLUMN_CHALLENGE_PROGRESS," +
-                " $COLUMN_CHALLENGE_TARGET, $COLUMN_CHALLENGE_METRIC, $COLUMN_CHALLENGE_XP, $COLUMN_CHALLENGE_HABIT) " +
-                "VALUES ('Swim 10 pool lengths:', 0, 10, '', 15, 'Swimming Duration')")
+                " $COLUMN_CHALLENGE_TARGET, $COLUMN_CHALLENGE_METRIC, $COLUMN_CHALLENGE_XP, $COLUMN_CHALLENGE_HABIT, $COLUMN_CHALLENGE_COMPLETED) " +
+                "VALUES ('Swim 10 pool lengths:', 0, 10, '', 15, 'Swimming Duration', 0)")
     }
 
     fun setWeeklyChallenges(db: SQLiteDatabase) {
         db.execSQL("INSERT INTO $TABLE_WEEKLY_CHALLENGES ($COLUMN_CHALLENGE_TITLE, $COLUMN_CHALLENGE_PROGRESS," +
-                " $COLUMN_CHALLENGE_TARGET, $COLUMN_CHALLENGE_METRIC, $COLUMN_CHALLENGE_XP, $COLUMN_CHALLENGE_HABIT) " +
-                "VALUES ('Drink 40 Litres of water:', 0, 40000, 'ml', 50, 'Daily Water Intake')")
+                " $COLUMN_CHALLENGE_TARGET, $COLUMN_CHALLENGE_METRIC, $COLUMN_CHALLENGE_XP, $COLUMN_CHALLENGE_HABIT, $COLUMN_CHALLENGE_COMPLETED) " +
+                "VALUES ('Drink 40 Litres of water:', 0, 40000, 'ml', 50, 'Daily Water Intake', 0)")
 
         db.execSQL("INSERT INTO $TABLE_WEEKLY_CHALLENGES ($COLUMN_CHALLENGE_TITLE, $COLUMN_CHALLENGE_PROGRESS," +
-                " $COLUMN_CHALLENGE_TARGET, $COLUMN_CHALLENGE_METRIC, $COLUMN_CHALLENGE_XP, $COLUMN_CHALLENGE_HABIT) " +
-                "VALUES ('Eat 50 fruits:', 0, 50, '', 50, '5-a-day')")
+                " $COLUMN_CHALLENGE_TARGET, $COLUMN_CHALLENGE_METRIC, $COLUMN_CHALLENGE_XP, $COLUMN_CHALLENGE_HABIT, $COLUMN_CHALLENGE_COMPLETED) " +
+                "VALUES ('Eat 50 fruits:', 0, 50, '', 50, '5-a-day', 0)")
 
         db.execSQL("INSERT INTO $TABLE_WEEKLY_CHALLENGES ($COLUMN_CHALLENGE_TITLE, $COLUMN_CHALLENGE_PROGRESS," +
-                " $COLUMN_CHALLENGE_TARGET, $COLUMN_CHALLENGE_METRIC, $COLUMN_CHALLENGE_XP, $COLUMN_CHALLENGE_HABIT) " +
-                "VALUES ('Do Not Exceed 24,500 kCal:', 0, 24500, 'kCal', 50, 'Daily Calorie Intake')")
+                " $COLUMN_CHALLENGE_TARGET, $COLUMN_CHALLENGE_METRIC, $COLUMN_CHALLENGE_XP, $COLUMN_CHALLENGE_HABIT, $COLUMN_CHALLENGE_COMPLETED) " +
+                "VALUES ('Do Not Exceed 24,500 kCal:', 0, 24500, 'kCal', 50, 'Daily Calorie Intake', 0)")
 
         db.execSQL("INSERT INTO $TABLE_WEEKLY_CHALLENGES ($COLUMN_CHALLENGE_TITLE, $COLUMN_CHALLENGE_PROGRESS," +
-                " $COLUMN_CHALLENGE_TARGET, $COLUMN_CHALLENGE_METRIC, $COLUMN_CHALLENGE_XP, $COLUMN_CHALLENGE_HABIT) " +
-                "VALUES ('Walk a distance of 45 kilometres:', 0, 45000, 'm', 50, 'Walking Distance')")
+                " $COLUMN_CHALLENGE_TARGET, $COLUMN_CHALLENGE_METRIC, $COLUMN_CHALLENGE_XP, $COLUMN_CHALLENGE_HABIT, $COLUMN_CHALLENGE_COMPLETED) " +
+                "VALUES ('Walk a distance of 45 kilometres:', 0, 45000, 'm', 50, 'Walking Distance', 0)")
 
         db.execSQL("INSERT INTO $TABLE_WEEKLY_CHALLENGES ($COLUMN_CHALLENGE_TITLE, $COLUMN_CHALLENGE_PROGRESS," +
-                " $COLUMN_CHALLENGE_TARGET, $COLUMN_CHALLENGE_METRIC, $COLUMN_CHALLENGE_XP, $COLUMN_CHALLENGE_HABIT) " +
-                "VALUES ('Cycle a distance of 215 miles:', 0, 215, 'miles', 50, 'Cycling Distance')")
+                " $COLUMN_CHALLENGE_TARGET, $COLUMN_CHALLENGE_METRIC, $COLUMN_CHALLENGE_XP, $COLUMN_CHALLENGE_HABIT, $COLUMN_CHALLENGE_COMPLETED) " +
+                "VALUES ('Cycle a distance of 215 miles:', 0, 215, 'miles', 50, 'Cycling Distance', 0)")
 
         db.execSQL("INSERT INTO $TABLE_WEEKLY_CHALLENGES ($COLUMN_CHALLENGE_TITLE, $COLUMN_CHALLENGE_PROGRESS," +
-                " $COLUMN_CHALLENGE_TARGET, $COLUMN_CHALLENGE_METRIC, $COLUMN_CHALLENGE_XP, $COLUMN_CHALLENGE_HABIT) " +
-                "VALUES ('Sleep a total of 62 hours:', 0, 62, 'hours', 50, 'Sleep monitor')")
+                " $COLUMN_CHALLENGE_TARGET, $COLUMN_CHALLENGE_METRIC, $COLUMN_CHALLENGE_XP, $COLUMN_CHALLENGE_HABIT, $COLUMN_CHALLENGE_COMPLETED) " +
+                "VALUES ('Sleep a total of 62 hours:', 0, 62, 'hours', 50, 'Sleep monitor', 0)")
 
         db.execSQL("INSERT INTO $TABLE_WEEKLY_CHALLENGES ($COLUMN_CHALLENGE_TITLE, $COLUMN_CHALLENGE_PROGRESS," +
-                " $COLUMN_CHALLENGE_TARGET, $COLUMN_CHALLENGE_METRIC, $COLUMN_CHALLENGE_XP, $COLUMN_CHALLENGE_HABIT) " +
-                "VALUES ('Workout for 25 hours:', 0, 25, 'hours', 50, 'Exercise Duration')")
+                " $COLUMN_CHALLENGE_TARGET, $COLUMN_CHALLENGE_METRIC, $COLUMN_CHALLENGE_XP, $COLUMN_CHALLENGE_HABIT, $COLUMN_CHALLENGE_COMPLETED) " +
+                "VALUES ('Workout for 25 hours:', 0, 25, 'hours', 50, 'Exercise Duration', 0)")
 
         db.execSQL("INSERT INTO $TABLE_WEEKLY_CHALLENGES ($COLUMN_CHALLENGE_TITLE, $COLUMN_CHALLENGE_PROGRESS," +
-                " $COLUMN_CHALLENGE_TARGET, $COLUMN_CHALLENGE_METRIC, $COLUMN_CHALLENGE_XP, $COLUMN_CHALLENGE_HABIT) " +
-                "VALUES ('Swim 100 pool lengths:', 0, 100, '', 50, 'Swimming Duration')")
+                " $COLUMN_CHALLENGE_TARGET, $COLUMN_CHALLENGE_METRIC, $COLUMN_CHALLENGE_XP, $COLUMN_CHALLENGE_HABIT, $COLUMN_CHALLENGE_COMPLETED) " +
+                "VALUES ('Swim 100 pool lengths:', 0, 100, '', 50, 'Swimming Duration', 0)")
     }
 
     fun addUser(username: String, email: String, password: String) : Boolean {
@@ -220,6 +229,9 @@ class UserDatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE
             put(COLUMN_DATE_CREATED, date)
             put(COLUMN_BIO, "")
             put(COLUMN_PROFILE_PICTURE, "")
+            put(COLUMN_LEVEL, 1)
+            put(COLUMN_CURRENT_XP, 0)
+            put(COLUMN_LEVEL_UP_XP, 100)
         }
 
         val db = this.writableDatabase
@@ -824,5 +836,114 @@ class UserDatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE
             completed = true
         }
         return completed
+    }
+
+    fun getLevelUpInfo(userID: Int) : List<String> {
+        val db = this.readableDatabase
+        val cursor = db.rawQuery("SELECT * FROM $TABLE_USERS WHERE $COLUMN_ID = ?", arrayOf(userID.toString()))
+
+        var info = mutableListOf<String>()
+        if (cursor.moveToFirst()) {
+            val level = cursor.getInt(cursor.getColumnIndexOrThrow("level"))
+            info.add(level.toString())
+            val currentXP = cursor.getInt(cursor.getColumnIndexOrThrow("current_xp"))
+            info.add(currentXP.toString())
+            val levelUpXP = cursor.getInt(cursor.getColumnIndexOrThrow("level_up_xp"))
+            info.add(levelUpXP.toString())
+        }
+        cursor.close()
+        return info
+    }
+
+    fun getChallengeCompletedStatus(dailyID: Int) : Boolean {
+        val db = this.readableDatabase
+        val cursor = db.rawQuery("SELECT $COLUMN_CHALLENGE_COMPLETED FROM $TABLE_DAILY_CHALLENGES WHERE $COLUMN_ID = ?", arrayOf(dailyID.toString()))
+
+        var completedInt = 0
+        if (cursor.moveToFirst()) {
+            completedInt = cursor.getInt(0)
+        }
+        cursor.close()
+
+        var completed = false
+        if (completedInt == 1) {
+            completed = true
+        }
+        return completed
+    }
+
+    fun updateCurrentXP(userID: Int, xp: Int) {
+        val db = this.writableDatabase
+        val newXP = xp + getUserXP(userID)
+
+        val values = ContentValues().apply {
+            put(COLUMN_CURRENT_XP, newXP)
+        }
+
+        db.update(TABLE_USERS, values, "$COLUMN_ID = ?", arrayOf(userID.toString()))
+        checkLevel(userID)
+    }
+
+    fun getUserXP(userID: Int) : Int {
+        val db = this.readableDatabase
+        val cursor = db.rawQuery("SELECT $COLUMN_CURRENT_XP FROM $TABLE_USERS WHERE $COLUMN_ID = ?", arrayOf(userID.toString()))
+
+        var xp = 0
+        if (cursor.moveToFirst()) {
+            xp = cursor.getInt(cursor.getColumnIndexOrThrow("current_xp"))
+        }
+        cursor.close()
+        return xp
+    }
+
+    fun checkLevel(userID: Int) {
+        val db = this.readableDatabase
+        val cursor = db.rawQuery("SELECT * FROM $TABLE_USERS WHERE $COLUMN_ID = ?", arrayOf(userID.toString()))
+
+        var level = 0
+        var currentXP = 0
+        var levelUpXP = 0
+        if (cursor.moveToFirst()) {
+            level = cursor.getInt(cursor.getColumnIndexOrThrow("level"))
+            currentXP = cursor.getInt(cursor.getColumnIndexOrThrow("current_xp"))
+            levelUpXP = cursor.getInt(cursor.getColumnIndexOrThrow("level_up_xp"))
+        }
+        cursor.close()
+
+        if (currentXP >= levelUpXP) {
+            setCurrentXP(userID, currentXP - levelUpXP)
+            setLevelUpXP(userID, levelUpXP + 100)
+            setLevel(userID, level + 1)
+        }
+    }
+
+    fun setCurrentXP(userID: Int, xp: Int) {
+        val db = this.writableDatabase
+
+        val values = ContentValues().apply {
+            put(COLUMN_CURRENT_XP, xp)
+        }
+
+        db.update(TABLE_USERS, values, "$COLUMN_ID = ?", arrayOf(userID.toString()))
+    }
+
+    fun setLevelUpXP(userID: Int, xp: Int) {
+        val db = this.writableDatabase
+
+        val values = ContentValues().apply {
+            put(COLUMN_LEVEL_UP_XP, xp)
+        }
+
+        db.update(TABLE_USERS, values, "$COLUMN_ID = ?", arrayOf(userID.toString()))
+    }
+
+    fun setLevel(userID: Int, level: Int) {
+        val db = this.writableDatabase
+
+        val values = ContentValues().apply {
+            put(COLUMN_LEVEL, level)
+        }
+
+        db.update(TABLE_USERS, values, "$COLUMN_ID = ?", arrayOf(userID.toString()))
     }
 }

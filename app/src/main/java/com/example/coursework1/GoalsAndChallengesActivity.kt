@@ -173,8 +173,11 @@ class GoalsAndChallengesActivity : AppCompatActivity() {
     }
 
     fun onWidgetDailyClicked(clickedChallenge: WidgetDailyInfo) {
-        val dailyId = clickedChallenge.dailyId
+        val sharedPreferences = getSharedPreferences("app_preferences", MODE_PRIVATE)
         val database = UserDatabaseManager(this)
+        val userID = database.getUserIdByUsername(sharedPreferences.getString("User", null))
+
+        val dailyId = clickedChallenge.dailyId
 
         val popUpLayout = layoutInflater.inflate(R.layout.goal_popup_layout, null)
         val text = popUpLayout.findViewById<TextView>(R.id.goal_text)
@@ -203,6 +206,10 @@ class GoalsAndChallengesActivity : AppCompatActivity() {
                     progressEntered = "0"
                 }
 
+                if ((progressEntered.toInt() + clickedChallenge.widgetProgress >= clickedChallenge.widgetMax) && !database.getChallengeCompletedStatus(clickedChallenge.dailyId)) {
+                    database.updateCurrentXP(userID, clickedChallenge.widgetXP)
+                }
+
                 database.updateDailyChallengeProgress(dailyId, progressEntered.toInt())
                 dailyAdapter.updateProgress(dailyId, progressEntered.toInt())
                 popUp.dismiss()
@@ -215,7 +222,9 @@ class GoalsAndChallengesActivity : AppCompatActivity() {
 
     fun onWidgetWeeklyClicked(clickedChallenge: WidgetWeeklyInfo) {
         val weeklyId = clickedChallenge.weeklyId
+        val sharedPreferences = getSharedPreferences("app_preferences", MODE_PRIVATE)
         val database = UserDatabaseManager(this)
+        val userID = database.getUserIdByUsername(sharedPreferences.getString("User", null))
 
         val popUpLayout = layoutInflater.inflate(R.layout.goal_popup_layout, null)
         val text = popUpLayout.findViewById<TextView>(R.id.goal_text)
@@ -242,6 +251,10 @@ class GoalsAndChallengesActivity : AppCompatActivity() {
 
                 if (progressEntered == "") {
                     progressEntered = "0"
+                }
+
+                if ((progressEntered.toInt() + clickedChallenge.widgetProgress >= clickedChallenge.widgetMax) && !database.getChallengeCompletedStatus(clickedChallenge.weeklyId)) {
+                    database.updateCurrentXP(userID, clickedChallenge.widgetXP)
                 }
 
                 database.updateWeeklyChallengeProgress(weeklyId, progressEntered.toInt())

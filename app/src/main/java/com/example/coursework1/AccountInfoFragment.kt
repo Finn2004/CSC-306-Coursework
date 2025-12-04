@@ -9,12 +9,14 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.coursework1.adapter.AccountTabsAdapter
 import com.example.coursework1.adapter.WidgetGoalAdapter
 import com.example.coursework1.adapter.WidgetGoalInfo
+import com.google.android.material.progressindicator.LinearProgressIndicator
 
 class AccountInfoFragment : Fragment() {
 
@@ -26,7 +28,26 @@ class AccountInfoFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val sharedPreferences = requireActivity().getSharedPreferences("app_preferences", MODE_PRIVATE)
+        val database = UserDatabaseManager(requireContext())
+
+        val userID = database.getUserIdByUsername(sharedPreferences?.getString("User", null))
+        val levelInfo = database.getLevelUpInfo(userID)
+
+        val level = view.findViewById<TextView>(R.id.level)
+        val levelText = "Level " + levelInfo[0]
+        level.text = levelText
+
+        val progressBar = view.findViewById<LinearProgressIndicator>(R.id.progress_bar)
+        progressBar.progress = levelInfo[1].toInt()
+        progressBar.max = levelInfo[2].toInt()
+
+        val progress = view.findViewById<TextView>(R.id.progress_text)
+        val progressText = levelInfo[1] + " / " + levelInfo[2] + " XP"
+        progress.text = progressText
+
         val recyclerView = view.findViewById<RecyclerView>(R.id.completed_goals_list)
+        adapter = WidgetGoalAdapter {}
         populate(adapter)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireActivity())
@@ -37,7 +58,7 @@ class AccountInfoFragment : Fragment() {
         val database = UserDatabaseManager(requireContext())
 
         val userID = database.getUserIdByUsername(sharedPreferences?.getString("User", null))
-        Log.e("USER", userID.toString())
+
 
         val userGoals = database.getUserGoals(userID)
         val userGoalsNum = userGoals.size
