@@ -34,6 +34,9 @@ class HomeScreenActivity : AppCompatActivity() {
 
         val database = UserDatabaseManager(this)
         val userID = database.getUserIdByUsername(sharedPreferences.getString("User", null))
+        database.updateAchievements(userID)
+        database.setUserDailyChallenges(userID)
+        database.setUserWeeklyChallenges(userID)
 
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -56,7 +59,7 @@ class HomeScreenActivity : AppCompatActivity() {
 
         val goalsAndChallengesButton = findViewById<ImageButton>(R.id.goals_button)
 
-        val makeShiftLogout = findViewById<ImageButton>(R.id.statistics_button)
+        val statisticsButton = findViewById<ImageButton>(R.id.statistics_button)
 
         mToolbar.setNavigationOnClickListener {
             val intent = Intent(this, UserProfileActivity::class.java)
@@ -65,17 +68,6 @@ class HomeScreenActivity : AppCompatActivity() {
 
         goalsAndChallengesButton.setOnClickListener {
             val intent = Intent(this, GoalsAndChallengesActivity::class.java)
-            startActivity(intent)
-        }
-
-        makeShiftLogout.setOnClickListener {
-            editor.putBoolean("logged_in", false)
-            editor.remove("user")
-            editor.apply()
-
-            val intent = Intent(this, LoginActivity::class.java).apply {
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            }
             startActivity(intent)
         }
     }

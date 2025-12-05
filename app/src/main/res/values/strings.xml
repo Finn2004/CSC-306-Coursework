@@ -135,4 +135,7 @@
     <string name="new_password">New Password</string>
     <string name="confirm">Confirm</string>
     <string name="bio">Bio</string>
+    <string name="achievements">Achievements:</string>
+    <string name="achievement_icon">achievement icon</string>
+    <string name="logout_warning">LOGOUT?</string>
 </resources>

@@ -6,9 +6,12 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
+import android.view.MenuItem
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.Spinner
 import android.widget.TextView
+import android.widget.ToggleButton
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -21,6 +24,8 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.viewpager2.widget.ViewPager2
 import com.example.coursework1.adapter.AccountTabsAdapter
+import com.example.coursework1.adapter.WidgetGoalAdapter
+import com.example.coursework1.adapter.WidgetHabitAdapter
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.button.MaterialButtonToggleGroup
 import java.security.Security
@@ -150,6 +155,45 @@ class UserProfileActivity : AppCompatActivity() {
             }
         }
 
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val database = UserDatabaseManager(this)
+        val sharedPreferences = getSharedPreferences("app_preferences", MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        val user = sharedPreferences.getString("User", null)
+        val userID = database.getUserIdByUsername(user)
+
+        when (item.itemId) {
+            R.id.logout -> {
+                val popUpLayout = layoutInflater.inflate(R.layout.confirm_logout_layout, null)
+                val popUp = AlertDialog.Builder(this)
+                    .setView(popUpLayout)
+                    .setCancelable(true)
+                    .setPositiveButton("Logout", null)
+                    .setNegativeButton("Cancel", null)
+                    .create()
+
+                popUp.setOnShowListener {
+                    popUp.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+                        editor.putBoolean("logged_in", false)
+                        editor.remove("user")
+                        editor.apply()
+
+                        val intent = Intent(this, LoginActivity::class.java).apply {
+                            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        }
+                        startActivity(intent)
+
+                        popUp.dismiss()
+                    }
+                }
+
+                popUp.show()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     fun getImageSelector() {

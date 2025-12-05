@@ -208,6 +208,7 @@ class GoalsAndChallengesActivity : AppCompatActivity() {
 
                 if ((progressEntered.toInt() + clickedChallenge.widgetProgress >= clickedChallenge.widgetMax) && !database.getChallengeCompletedStatus(clickedChallenge.dailyId)) {
                     database.updateCurrentXP(userID, clickedChallenge.widgetXP)
+                    database.updateDailyChallengeCompleted(clickedChallenge.dailyId)
                 }
 
                 database.updateDailyChallengeProgress(dailyId, progressEntered.toInt())
@@ -255,6 +256,7 @@ class GoalsAndChallengesActivity : AppCompatActivity() {
 
                 if ((progressEntered.toInt() + clickedChallenge.widgetProgress >= clickedChallenge.widgetMax) && !database.getChallengeCompletedStatus(clickedChallenge.weeklyId)) {
                     database.updateCurrentXP(userID, clickedChallenge.widgetXP)
+                    database.updateWeeklyChallengeCompleted(clickedChallenge.weeklyId)
                 }
 
                 database.updateWeeklyChallengeProgress(weeklyId, progressEntered.toInt())
@@ -355,13 +357,12 @@ class GoalsAndChallengesActivity : AppCompatActivity() {
 
             if (database.habitForUser(userID, habits[i][0])) {
 
-                val challenges = database.getDailyChallenges(habits[i][0])
+                val challenges = database.getDailyChallenges(habits[i][0], userID)
                 val challengeNum = challenges.size
 
                 for (i in 0 until challengeNum) {
 
                     val icon = database.getDefaultHabitInfo(challenges[i][5])[2].toInt()
-                    Log.e("IMAGE", challenges[i].toString())
 
                     val newChallengeWidget = WidgetDailyInfo(
                         dailyId = challenges[i][6].toInt(),
@@ -393,7 +394,7 @@ class GoalsAndChallengesActivity : AppCompatActivity() {
 
             if (database.habitForUser(userID, habits[i][0])) {
 
-                val challenges = database.getWeeklyChallenges(habits[i][0])
+                val challenges = database.getWeeklyChallenges(habits[i][0], userID)
                 val challengeNum = challenges.size
 
                 for (i in 0 until challengeNum) {
