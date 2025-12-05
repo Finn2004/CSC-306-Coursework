@@ -77,6 +77,13 @@ class GoalsAndChallengesActivity : AppCompatActivity() {
             val intent = Intent(this, HomeScreenActivity::class.java)
             startActivity(intent)
         }
+
+        val statisticsButton = findViewById<ImageButton>(R.id.statistics_button)
+
+        statisticsButton.setOnClickListener {
+            val intent = Intent(this, StatisticsActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

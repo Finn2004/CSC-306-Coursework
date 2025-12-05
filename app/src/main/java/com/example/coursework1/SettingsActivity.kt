@@ -209,7 +209,7 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate((R.menu.user_profile_upper_bar_layout), menu)
+        menuInflater.inflate((R.menu.settings_upper_bar_layout), menu)
         return super.onCreateOptionsMenu(menu)
     }
 }

@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:background="@color/button_bar"
-        app:menu="@menu/user_profile_upper_bar_layout"
+        app:menu="@menu/settings_upper_bar_layout"
         app:navigationIcon="@drawable/ic_back"
         app:titleTextColor="@android:color/white"
         app:title="Settings"

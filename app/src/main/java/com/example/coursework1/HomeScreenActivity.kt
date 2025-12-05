@@ -70,6 +70,11 @@ class HomeScreenActivity : AppCompatActivity() {
             val intent = Intent(this, GoalsAndChallengesActivity::class.java)
             startActivity(intent)
         }
+
+        statisticsButton.setOnClickListener {
+            val intent = Intent(this, StatisticsActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
