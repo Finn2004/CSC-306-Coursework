@@ -138,4 +138,7 @@
     <string name="achievements">Achievements:</string>
     <string name="achievement_icon">achievement icon</string>
     <string name="logout_warning">LOGOUT?</string>
+    <string name="left_arrow"><![CDATA[<]]></string>
+    <string name="right_arrow"><![CDATA[>]]></string>
+    <string name="stat_placeholder">Stat Placeholder</string>
 </resources>

@@ -5,6 +5,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.net.Uri
+import android.util.Log
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -14,7 +15,7 @@ class UserDatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE
 
     companion object {
         private const val DATABASE_NAME = "APP_USERS"
-        private const val DATABASE_VERSION = 37
+        private const val DATABASE_VERSION = 38
         private const val FAILED = -1L
         private const val TABLE_USERS = "users"
         private const val TABLE_USER_INFO = "user_info"
@@ -960,9 +961,26 @@ class UserDatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE
         return info
     }
 
-    fun getChallengeCompletedStatus(dailyID: Int) : Boolean {
+    fun getDailyChallengeCompletedStatus(dailyID: Int) : Boolean {
         val db = this.readableDatabase
         val cursor = db.rawQuery("SELECT $COLUMN_CHALLENGE_COMPLETED FROM $TABLE_DAILY_CHALLENGES WHERE $COLUMN_ID = ?", arrayOf(dailyID.toString()))
+
+        var completedInt = 0
+        if (cursor.moveToFirst()) {
+            completedInt = cursor.getInt(0)
+        }
+        cursor.close()
+
+        var completed = false
+        if (completedInt == 1) {
+            completed = true
+        }
+        return completed
+    }
+
+    fun getWeeklyChallengeCompletedStatus(weeklyID: Int) : Boolean {
+        val db = this.readableDatabase
+        val cursor = db.rawQuery("SELECT $COLUMN_CHALLENGE_COMPLETED FROM $TABLE_WEEKLY_CHALLENGES WHERE $COLUMN_ID = ?", arrayOf(weeklyID.toString()))
 
         var completedInt = 0
         if (cursor.moveToFirst()) {
@@ -1168,5 +1186,42 @@ class UserDatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE
         }
 
         db.update(TABLE_WEEKLY_CHALLENGES, values, "$COLUMN_ID = ?", arrayOf(weeklyID.toString()))
+    }
+
+    fun getUserHabitNames(userID: Int) : MutableList<String> {
+        val db = this.readableDatabase
+        val cursor = db.rawQuery("SELECT $COLUMN_HABIT_NAME FROM $TABLE_USER_HABITS WHERE $COLUMN_USER_ID = ?", arrayOf(userID.toString()))
+
+        val habitNames = mutableListOf<String>()
+        if (cursor.moveToFirst()) {
+            do {
+                val habitName = cursor.getString(0)
+                habitNames.add(habitName.toString())
+
+            } while (cursor.moveToNext())
+        }
+
+        cursor.close()
+        return habitNames
+    }
+
+    fun getUserCompletedDailyChallengesNumForHabit(userID: Int, habit: String) : Int {
+        val db = this.readableDatabase
+        val cursor = db.rawQuery("SELECT * FROM $TABLE_DAILY_CHALLENGES WHERE $COLUMN_USER_ID = ? AND $COLUMN_CHALLENGE_COMPLETED = 1 AND $COLUMN_CHALLENGE_HABIT = ?", arrayOf(userID.toString(), habit))
+
+        val challengesComplete = cursor.count
+
+        cursor.close()
+        return challengesComplete
+    }
+
+    fun getUserCompletedWeeklyChallengesNumForHabit(userID: Int, habit: String) : Int {
+        val db = this.readableDatabase
+        val cursor = db.rawQuery("SELECT * FROM $TABLE_WEEKLY_CHALLENGES WHERE $COLUMN_USER_ID = ? AND $COLUMN_CHALLENGE_COMPLETED = 1 AND $COLUMN_CHALLENGE_HABIT = ?", arrayOf(userID.toString(), habit))
+
+        val challengesComplete = cursor.count
+
+        cursor.close()
+        return challengesComplete
     }
 }

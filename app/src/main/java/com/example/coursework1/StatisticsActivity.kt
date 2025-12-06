@@ -1,26 +1,21 @@
 package com.example.coursework1
 
 import android.content.Intent
-import android.hardware.Sensor
-import android.hardware.SensorEvent
-import android.hardware.SensorEventListener
-import android.hardware.SensorManager
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
+import android.widget.Button
 import android.widget.ImageButton
-import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.viewpager2.widget.ViewPager2
+import com.example.coursework1.adapter.StatsTabsAdapter
+import android.widget.TextView
 
-class StatisticsActivity : AppCompatActivity(), SensorEventListener {
-
-    private  var sensorManager: SensorManager? = null
-    private var totalSteps = 0f
-    private var previousSteps = 0f
+class StatisticsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,10 +27,27 @@ class StatisticsActivity : AppCompatActivity(), SensorEventListener {
             insets
         }
 
-        sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
-
         val mToolbar = findViewById<Toolbar>(R.id.stats_top_toolbar)
         setSupportActionBar(mToolbar)
+
+        val viewPager = findViewById<ViewPager2>(R.id.pager)
+        val adapter = StatsTabsAdapter(this)
+        viewPager.adapter = adapter
+        val leftButton = findViewById<Button>(R.id.left)
+        val rightButton = findViewById<Button>(R.id.right)
+
+        val title = findViewById<TextView>(R.id.title)
+        title.text = adapter.getStatName(viewPager.currentItem)
+
+        leftButton.setOnClickListener {
+            viewPager.setCurrentItem(viewPager.currentItem - 1, true)
+            title.text = adapter.getStatName(viewPager.currentItem)
+        }
+
+        rightButton.setOnClickListener {
+            viewPager.setCurrentItem(viewPager.currentItem + 1, true)
+            title.text = adapter.getStatName(viewPager.currentItem)
+        }
 
         val goalsAndChallengesButton = findViewById<ImageButton>(R.id.goals_button)
 
@@ -57,29 +69,4 @@ class StatisticsActivity : AppCompatActivity(), SensorEventListener {
         return super.onCreateOptionsMenu(menu)
     }
 
-    override fun onResume() {
-        val stepCounter = sensorManager?.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
-        sensorManager?.registerListener(this,sensorManager?.getDefaultSensor(Sensor.TYPE_STEP_COUNTER),
-            SensorManager.SENSOR_DELAY_NORMAL)
-        super.onResume()
-    }
-
-    override fun onPause() {
-        sensorManager?.unregisterListener(this)
-        super.onPause()
-    }
-
-    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
-
-    }
-
-    override fun onSensorChanged(event: SensorEvent) {
-        if (event.sensor.type == Sensor.TYPE_STEP_COUNTER) {
-            totalSteps = event.values[0]
-            val currentSteps = totalSteps.toInt() - previousSteps.toInt()
-            val text = findViewById<TextView>(R.id.steps)
-            text.text = currentSteps.toString()
-
-        }
-    }
 }

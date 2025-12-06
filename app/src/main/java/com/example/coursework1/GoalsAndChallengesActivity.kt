@@ -7,6 +7,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Spinner
 import androidx.activity.enableEdgeToEdge
@@ -191,10 +192,12 @@ class GoalsAndChallengesActivity : AppCompatActivity() {
         val metric = popUpLayout.findViewById<TextView>(R.id.metric)
         val progress = popUpLayout.findViewById<TextView>(R.id.current_progress)
         val currentProgress = clickedChallenge.widgetProgress.toString() + " / " + clickedChallenge.widgetMax.toString()
+        val image = popUpLayout.findViewById<ImageView>(R.id.image)
 
         text.text = clickedChallenge.widgetText
         progress.text = currentProgress
         metric.text = clickedChallenge.widgetMetric
+        image.setImageResource(clickedChallenge.widgetImage)
 
         val progressEnterable = popUpLayout.findViewById<EditText>(R.id.progress_enterable)
 
@@ -213,7 +216,7 @@ class GoalsAndChallengesActivity : AppCompatActivity() {
                     progressEntered = "0"
                 }
 
-                if ((progressEntered.toInt() + clickedChallenge.widgetProgress >= clickedChallenge.widgetMax) && !database.getChallengeCompletedStatus(clickedChallenge.dailyId)) {
+                if ((progressEntered.toInt() + clickedChallenge.widgetProgress >= clickedChallenge.widgetMax) && !database.getDailyChallengeCompletedStatus(clickedChallenge.dailyId)) {
                     database.updateCurrentXP(userID, clickedChallenge.widgetXP)
                     database.updateDailyChallengeCompleted(clickedChallenge.dailyId)
                 }
@@ -239,10 +242,13 @@ class GoalsAndChallengesActivity : AppCompatActivity() {
         val metric = popUpLayout.findViewById<TextView>(R.id.metric)
         val progress = popUpLayout.findViewById<TextView>(R.id.current_progress)
         val currentProgress = clickedChallenge.widgetProgress.toString() + " / " + clickedChallenge.widgetMax.toString()
+        val image = popUpLayout.findViewById<ImageView>(R.id.image)
 
         text.text = clickedChallenge.widgetText
         progress.text = currentProgress
         metric.text = clickedChallenge.widgetMetric
+        image.setImageResource(clickedChallenge.widgetImage)
+
 
         val progressEnterable = popUpLayout.findViewById<EditText>(R.id.progress_enterable)
 
@@ -261,7 +267,7 @@ class GoalsAndChallengesActivity : AppCompatActivity() {
                     progressEntered = "0"
                 }
 
-                if ((progressEntered.toInt() + clickedChallenge.widgetProgress >= clickedChallenge.widgetMax) && !database.getChallengeCompletedStatus(clickedChallenge.weeklyId)) {
+                if ((progressEntered.toInt() + clickedChallenge.widgetProgress >= clickedChallenge.widgetMax) && !database.getWeeklyChallengeCompletedStatus(clickedChallenge.weeklyId)) {
                     database.updateCurrentXP(userID, clickedChallenge.widgetXP)
                     database.updateWeeklyChallengeCompleted(clickedChallenge.weeklyId)
                 }
