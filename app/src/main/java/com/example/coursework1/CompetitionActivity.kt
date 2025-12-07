@@ -15,39 +15,21 @@ import androidx.viewpager2.widget.ViewPager2
 import com.example.coursework1.adapter.StatsTabsAdapter
 import android.widget.TextView
 
-class StatisticsActivity : AppCompatActivity() {
+class CompetitionActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_statistics)
+        setContentView(R.layout.activity_competition)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.Background)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
-        val mToolbar = findViewById<Toolbar>(R.id.stats_top_toolbar)
+        val mToolbar = findViewById<Toolbar>(R.id.comp_top_toolbar)
         setSupportActionBar(mToolbar)
 
-        val viewPager = findViewById<ViewPager2>(R.id.pager)
-        val adapter = StatsTabsAdapter(this)
-        viewPager.adapter = adapter
-        val leftButton = findViewById<Button>(R.id.left)
-        val rightButton = findViewById<Button>(R.id.right)
-
-        val title = findViewById<TextView>(R.id.title)
-        title.text = adapter.getStatName(viewPager.currentItem)
-
-        leftButton.setOnClickListener {
-            viewPager.setCurrentItem(viewPager.currentItem - 1, true)
-            title.text = adapter.getStatName(viewPager.currentItem)
-        }
-
-        rightButton.setOnClickListener {
-            viewPager.setCurrentItem(viewPager.currentItem + 1, true)
-            title.text = adapter.getStatName(viewPager.currentItem)
-        }
 
         val goalsAndChallengesButton = findViewById<ImageButton>(R.id.goals_button)
 
@@ -63,10 +45,10 @@ class StatisticsActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        val competitionButton = findViewById<ImageButton>(R.id.competition_button)
+        val statisticsButton = findViewById<ImageButton>(R.id.statistics_button)
 
-        competitionButton.setOnClickListener {
-            val intent = Intent(this, CompetitionActivity::class.java)
+        statisticsButton.setOnClickListener {
+            val intent = Intent(this, StatisticsActivity::class.java)
             startActivity(intent)
         }
     }

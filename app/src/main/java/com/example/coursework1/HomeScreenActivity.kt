@@ -61,6 +61,8 @@ class HomeScreenActivity : AppCompatActivity() {
 
         val statisticsButton = findViewById<ImageButton>(R.id.statistics_button)
 
+        val competitionButton = findViewById<ImageButton>(R.id.competition_button)
+
         mToolbar.setNavigationOnClickListener {
             val intent = Intent(this, UserProfileActivity::class.java)
             startActivity(intent)
@@ -73,6 +75,11 @@ class HomeScreenActivity : AppCompatActivity() {
 
         statisticsButton.setOnClickListener {
             val intent = Intent(this, StatisticsActivity::class.java)
+            startActivity(intent)
+        }
+
+        competitionButton.setOnClickListener {
+            val intent = Intent(this, CompetitionActivity::class.java)
             startActivity(intent)
         }
     }
@@ -178,6 +185,11 @@ class HomeScreenActivity : AppCompatActivity() {
                     progressEntered = "0"
                 }
 
+                if ((progressEntered.toInt() + clickedHabit.widgetProgress >= clickedHabit.widgetMax) && !database.getHabitCompletedStatus(clickedHabit.habitId)) {
+                    database.updateCompletedCount(clickedHabit.habitId)
+                    database.updateHabitCompleted(clickedHabit.habitId)
+                }
+
                 database.updateHabitProgress(habitId, progressEntered.toInt())
                 adapter.updateProgress(habitId, progressEntered.toInt())
                 popUp.dismiss()
@@ -218,6 +230,11 @@ class HomeScreenActivity : AppCompatActivity() {
 
                 if (progressEntered == "") {
                     progressEntered = "0"
+                }
+
+                if ((progressEntered.toInt() + clickedHabit.widgetProgress >= clickedHabit.widgetMax) && !database.getHabitCompletedStatus(clickedHabit.habitId)) {
+                    database.updateCompletedCount(clickedHabit.habitId)
+                    database.updateHabitCompleted(clickedHabit.habitId)
                 }
 
                 database.updateHabitProgress(habitId, progressEntered.toInt())

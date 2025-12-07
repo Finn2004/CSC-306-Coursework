@@ -15,7 +15,7 @@ class UserDatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE
 
     companion object {
         private const val DATABASE_NAME = "APP_USERS"
-        private const val DATABASE_VERSION = 38
+        private const val DATABASE_VERSION = 42
         private const val FAILED = -1L
         private const val TABLE_USERS = "users"
         private const val TABLE_USER_INFO = "user_info"
@@ -51,6 +51,8 @@ class UserDatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE
         private const val COLUMN_HABIT_MAX = "habit_max"
         private const val COLUMN_HABIT_METRIC = "habit_metric"
         private const val COLUMN_HABIT_ICON = "habit_icon"
+        private const val COLUMN_HABIT_COMPLETED = "habit_completed"
+        private const val COLUMN_HABIT_TIMES_COMPLETED = "times_completed"
         private const val COLUMN_CHALLENGE_TITLE = "challenge_title"
         private const val COLUMN_CHALLENGE_PROGRESS = "challenge_progress"
         private const val COLUMN_CHALLENGE_TARGET = "challenge_target"
@@ -111,6 +113,8 @@ class UserDatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE
                     "$COLUMN_HABIT_MAX INTEGER," +
                     "$COLUMN_HABIT_METRIC TEXT," +
                     "$COLUMN_HABIT_ICON INTEGER," +
+                    "$COLUMN_HABIT_COMPLETED INTEGER," +
+                    "$COLUMN_HABIT_TIMES_COMPLETED INTEGER," +
                     "$COLUMN_USER_ID INTEGER," +
                     "FOREIGN KEY ($COLUMN_USER_ID) REFERENCES $TABLE_USERS($COLUMN_ID) ON DELETE CASCADE)"
 
@@ -382,6 +386,8 @@ class UserDatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE
             put(COLUMN_HABIT_MAX, max)
             put(COLUMN_HABIT_METRIC, metric)
             put(COLUMN_HABIT_ICON, icon)
+            put(COLUMN_HABIT_COMPLETED, 0)
+            put(COLUMN_HABIT_TIMES_COMPLETED, 0)
             put(COLUMN_USER_ID, user)
         }
 
@@ -1224,4 +1230,69 @@ class UserDatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE
         cursor.close()
         return challengesComplete
     }
+
+    fun getUserCompletedDailyHabitNum(userID: Int, habit: String) : Int {
+        val db = this.readableDatabase
+        val cursor = db.rawQuery("SELECT $COLUMN_HABIT_TIMES_COMPLETED FROM $TABLE_USER_HABITS WHERE $COLUMN_USER_ID = ? AND $COLUMN_HABIT_NAME = ?", arrayOf(userID.toString(), habit))
+
+        var timesCompleted = 0
+        if (cursor.moveToFirst()) {
+            timesCompleted = cursor.getInt(0)
+        }
+
+        cursor.close()
+        return timesCompleted
+    }
+
+    fun updateHabitCompleted(habitID: Int) {
+        val db = this.writableDatabase
+
+        val values = ContentValues().apply {
+            put(COLUMN_HABIT_COMPLETED, 1)
+        }
+
+        db.update(TABLE_USER_HABITS, values, "$COLUMN_ID = ?", arrayOf(habitID.toString()))
+    }
+
+    fun getHabitCompletedStatus(habitID: Int) : Boolean {
+        val db = this.readableDatabase
+        val cursor = db.rawQuery("SELECT $COLUMN_HABIT_COMPLETED FROM $TABLE_USER_HABITS WHERE $COLUMN_ID = ?", arrayOf(habitID.toString()))
+
+        var completedInt = 0
+        if (cursor.moveToFirst()) {
+            completedInt = cursor.getInt(0)
+        }
+        cursor.close()
+
+        var completed = false
+        if (completedInt == 1) {
+            completed = true
+        }
+        return completed
+    }
+
+    fun updateCompletedCount(habitID: Int) {
+        val db = this.writableDatabase
+
+        val values = ContentValues().apply {
+            put(COLUMN_HABIT_TIMES_COMPLETED, getTimesCompleted(habitID) + 1)
+        }
+
+        db.update(TABLE_USER_HABITS, values, "$COLUMN_ID = ?", arrayOf(habitID.toString()))
+    }
+
+    fun getTimesCompleted(habitID: Int) : Int {
+        val db = this.readableDatabase
+        val cursor = db.rawQuery("SELECT $COLUMN_HABIT_TIMES_COMPLETED FROM $TABLE_USER_HABITS WHERE $COLUMN_ID = ?", arrayOf(habitID.toString()))
+
+        var current = 0
+        if (cursor.moveToFirst()) {
+            current = cursor.getInt(0)
+        }
+        cursor.close()
+
+        return current
+    }
+
+
 }

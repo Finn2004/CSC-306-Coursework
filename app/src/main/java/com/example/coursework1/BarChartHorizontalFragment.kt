@@ -16,12 +16,13 @@ import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import android.graphics.Color
 import android.util.Log
 import androidx.core.graphics.toColorInt
+import com.github.mikephil.charting.charts.HorizontalBarChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 
-class BarChartFragment : Fragment() {
+class BarChartHorizontalFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
-        inflater.inflate(R.layout.fragment_bar_chart, container, false)!!
+        inflater.inflate(R.layout.fragment_bar_chart_horizontal, container, false)!!
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val sharedPreferences = requireActivity().getSharedPreferences("app_preferences", MODE_PRIVATE)
@@ -30,40 +31,30 @@ class BarChartFragment : Fragment() {
 
         super.onViewCreated(view, savedInstanceState)
 
-        val barChart = view.findViewById<BarChart>(R.id.barChart)
+        val barChart = view.findViewById<HorizontalBarChart>(R.id.barChartHorizonal)
 
         val groupLabels = getGroups(userID, database)
         val groupCount = groupLabels.size
 
-        val dataSet1 = BarDataSet(getDailyCompletesEntries(userID, groupLabels, database), "Daily")
+        val dataSet1 = BarDataSet(getDailyHabitsEntries(userID, groupLabels, database), "Daily")
         dataSet1.color = "#AA7CEB".toColorInt()
-        val dataSet2 = BarDataSet(getWeeklyCompletesEntries(userID, groupLabels, database), "Weekly")
-        dataSet2.color = "#3D65F5".toColorInt()
 
-        val barDataSet = BarData(dataSet1, dataSet2)
+        val barDataSet = BarData(dataSet1)
         barDataSet.barWidth = 0.4f
 
         barChart.data = barDataSet
         barChart.animateY(500)
 
-        val barSpace = 0.03f
-        val startX = 0f
-        val groupSpace = 1f - (barDataSet.barWidth * 2 + barSpace)
-
-        val groupWidth = barDataSet.getGroupWidth(groupSpace, barSpace)
-        barChart.xAxis.axisMinimum = startX
-        barChart.xAxis.axisMaximum = startX + groupWidth * groupCount
-
-        barChart.groupBars(startX, groupSpace, barSpace)
-
         val xAxis = barChart.xAxis
         xAxis.textColor = Color.WHITE
         xAxis.textSize = 20f
+        xAxis.granularity = 1f
+        xAxis.isGranularityEnabled = true
         xAxis.gridColor = Color.GRAY
         xAxis.axisLineColor = Color.WHITE
-        xAxis.position = XAxis.XAxisPosition.BOTTOM_INSIDE
-        xAxis.labelRotationAngle = -90f
-        xAxis.setCenterAxisLabels(true)
+        xAxis.position = XAxis.XAxisPosition.TOP_INSIDE
+        xAxis.labelRotationAngle = 0f
+        xAxis.setCenterAxisLabels(false)
         xAxis.valueFormatter = IndexAxisValueFormatter(groupLabels)
 
         val leftAxis = barChart.axisLeft
@@ -89,20 +80,10 @@ class BarChartFragment : Fragment() {
         return database.getUserHabitNames(userID)
     }
 
-    fun getDailyCompletesEntries(userID: Int, groups: List<String>, database: UserDatabaseManager) : List<BarEntry> {
+    fun getDailyHabitsEntries(userID: Int, groups: List<String>, database: UserDatabaseManager) : List<BarEntry> {
         val entries = mutableListOf<BarEntry>()
         for (i in 0 until groups.size) {
-            val entryVal = database.getUserCompletedDailyChallengesNumForHabit(userID, groups[i])
-            val entry = BarEntry(i.toFloat(), entryVal.toFloat())
-            entries.add(entry)
-        }
-        return entries
-    }
-
-    fun getWeeklyCompletesEntries(userID: Int, groups: List<String>, database: UserDatabaseManager) : List<BarEntry> {
-        val entries = mutableListOf<BarEntry>()
-        for (i in 0 until groups.size) {
-            val entryVal = database.getUserCompletedWeeklyChallengesNumForHabit(userID, groups[i])
+            val entryVal = database.getUserCompletedDailyHabitNum(userID, groups[i])
             val entry = BarEntry(i.toFloat(), entryVal.toFloat())
             entries.add(entry)
         }
