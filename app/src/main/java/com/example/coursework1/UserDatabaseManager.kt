@@ -15,7 +15,7 @@ class UserDatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE
 
     companion object {
         private const val DATABASE_NAME = "APP_USERS"
-        private const val DATABASE_VERSION = 42
+        private const val DATABASE_VERSION = 44
         private const val FAILED = -1L
         private const val TABLE_USERS = "users"
         private const val TABLE_USER_INFO = "user_info"
@@ -350,12 +350,23 @@ class UserDatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE
     }
 
     fun addUserInfo(info: List<String>) : Boolean {
+        var height = info[3]
+        var weight = info[4]
+
+        if (info[3] == "") {
+            height = "0"
+        }
+
+        if (info[4] == "") {
+            weight = "0"
+        }
+
         val values = ContentValues().apply {
             put(COLUMN_FIRST_NAME, info[0])
             put(COLUMN_SURNAME, info[1])
             put(COLUMN_DOB, info[2])
-            put(COLUMN_HEIGHT, info[3].toInt())
-            put(COLUMN_WEIGHT, info[4].toInt())
+            put(COLUMN_HEIGHT, height.toInt())
+            put(COLUMN_WEIGHT, weight.toInt())
             put(COLUMN_USER_ID, info[5].toInt())
         }
 
