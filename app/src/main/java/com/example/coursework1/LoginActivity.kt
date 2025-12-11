@@ -67,9 +67,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun returnToHome() {
-        val intent = Intent(this, HomeScreenActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        }
+        val intent = Intent(this, HomeScreenActivity::class.java)
         startActivity(intent)
     }
 }
